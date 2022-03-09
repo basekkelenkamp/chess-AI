@@ -13,9 +13,12 @@ class Game {
     private readonly KNIGHTS: number = 4;   // number of knights
 
     private playerTurn:boolean = true;      // player has first turn 
+
+    private ui:HTMLElement;
  
     constructor() {
         Board.getInstance(); // init board
+        this.ui = document.getElementById("ui")!;
 
         // create king for the player and put on middle of bottom row
         this.king = new King();
@@ -89,6 +92,7 @@ class Game {
                         // win or loss
                         if(evaluation[0] == 100){
                             console.log("Success!")
+                            this.ui.textContent = "You won!"
                         } 
                     }
                     // Update score if game not finished
@@ -124,6 +128,7 @@ class Game {
             if (this.gameState.getScore()[1]) {
                 this.gameOver = true;
                 console.log("Defeat..")
+                this.ui.textContent = "Defeat.."
             }
         }
 

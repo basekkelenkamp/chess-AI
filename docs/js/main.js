@@ -139,6 +139,7 @@ class Game {
         this.KNIGHTS = 4;
         this.playerTurn = true;
         Board.getInstance();
+        this.ui = document.getElementById("ui");
         this.king = new King();
         this.king.initPosition([Math.floor(Board.getInstance().getSize() / 2), Board.getInstance().getSize() - 1]);
         let knightPos = [];
@@ -183,6 +184,7 @@ class Game {
                         this.gameOver = true;
                         if (evaluation[0] == 100) {
                             console.log("Success!");
+                            this.ui.textContent = "You won!";
                         }
                     }
                     else {
@@ -206,6 +208,7 @@ class Game {
             if (this.gameState.getScore()[1]) {
                 this.gameOver = true;
                 console.log("Defeat..");
+                this.ui.textContent = "Defeat..";
             }
         }
         requestAnimationFrame(() => this.gameLoop());
