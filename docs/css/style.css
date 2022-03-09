@@ -3,8 +3,8 @@ html, body {
     font-family: 'Press Start 2P', cursive;
     overflow:hidden;
     margin:0px; padding:0px;
-    /* background-image: url('../images/grass.png');
-    background-repeat: repeat; */
+    background-image: url('../images/grass.png');
+    background-repeat: repeat;
 }
 
 script {
@@ -19,21 +19,6 @@ body * {
     background-repeat: no-repeat;
 }
 
-phone-component {
-	width:50px; min-height:92px;
-	background-image: url('../images/phone.png');
-}
-
-zombie-component {
-	width:67px; min-height:119px;
-	background-image: url('../images/zombie.png');
-}
-
-chicken-component {
-    width:67px; height:110px;
-    background-image: url('../images/chickenwalking.gif');
-}
-
 knight-component {
 	width:342px; min-height:600px;
 	background-image: url('../images/knight.png');
@@ -46,7 +31,7 @@ king-component {
 
 tile-component {
     width:300; height:300;
-    background-color: white;
+    background-color: rgb(255, 185, 104);
 }
 
 ui {
@@ -54,7 +39,7 @@ ui {
     text-shadow: 8px 8px 0px black;
     color:white;
     padding:20px;
-    width:100%;
+    width:150%;
     text-align: center;
     z-index: 1;
 }

@@ -81,9 +81,19 @@ class Game {
                     this.gameState.kingPos = boardPos;
                     this.playerTurn = false;
 
-                    // check win
-                    if (this.gameState.getScore()[1]) {
+                    // check if win
+                    let evaluation:[number, boolean] = this.gameState.getScore()
+                    if (evaluation[1]) {
                         this.gameOver = true;
+
+                        // win or loss
+                        if(evaluation[0] == 100){
+                            console.log("Success!")
+                        } 
+                    }
+                    // Update score if game not finished
+                    else {
+                        console.log(`Score: ${this.gameState.getScore()[0]}`)
                     }
                 }
             }
@@ -113,6 +123,7 @@ class Game {
             // check lose
             if (this.gameState.getScore()[1]) {
                 this.gameOver = true;
+                console.log("Defeat..")
             }
         }
 

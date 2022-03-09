@@ -4,7 +4,7 @@ class GameObject extends HTMLElement {
         super();
         this.pos = [0, 0];
         this.targetPos = [0, 0];
-        this.speed = [2, 2];
+        this.speed = [5, 5];
         this.direction = 1;
         this.moving = false;
         document.body.appendChild(this);
@@ -136,7 +136,7 @@ class Game {
     constructor() {
         this.knights = [];
         this.gameOver = false;
-        this.KNIGHTS = 3;
+        this.KNIGHTS = 4;
         this.playerTurn = true;
         Board.getInstance();
         this.king = new King();
@@ -178,8 +178,15 @@ class Game {
                     this.king.setPosition(boardPos);
                     this.gameState.kingPos = boardPos;
                     this.playerTurn = false;
-                    if (this.gameState.getScore()[1]) {
+                    let evaluation = this.gameState.getScore();
+                    if (evaluation[1]) {
                         this.gameOver = true;
+                        if (evaluation[0] == 100) {
+                            console.log("Success!");
+                        }
+                    }
+                    else {
+                        console.log(`Score: ${this.gameState.getScore()[0]}`);
                     }
                 }
             }
@@ -198,6 +205,7 @@ class Game {
             this.playerTurn = true;
             if (this.gameState.getScore()[1]) {
                 this.gameOver = true;
+                console.log("Defeat..");
             }
         }
         requestAnimationFrame(() => this.gameLoop());

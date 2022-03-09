@@ -3,7 +3,7 @@ class GameObject extends HTMLElement {
     public div: HTMLElement;
     public pos: [number, number] = [0, 0];          // current position in screen coordinates
     public targetPos: [number, number] = [0, 0];    // target position in screen coordinates
-    public speed: [number, number] = [2, 2];        // move speed
+    public speed: [number, number] = [5, 5];        // move speed
 
     public width:number;
     public height:number;
