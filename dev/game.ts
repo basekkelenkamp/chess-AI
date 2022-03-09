@@ -76,6 +76,16 @@ class Game {
             console.log(boardPos);
             let legalMoves: [number, number][] = this.king.getMoves();
 
+            for (let knightPosition of this.gameState.knightPositions) {
+                for(let m of legalMoves) {
+                    if (Board.samePosition(knightPosition, m)) {
+                        console.log("That's a knight!")
+                        let index = legalMoves.indexOf(m)
+                        legalMoves.splice(index, 1)
+                    }
+                }
+            }
+
             // check if requested move is a legal move
             for(let m of legalMoves) {
                 if (Board.samePosition(m, boardPos)) {
@@ -83,24 +93,14 @@ class Game {
                     this.king.setPosition(boardPos);
                     this.gameState.kingPos = boardPos;
                     this.playerTurn = false;
-
-                    // check if win
-                    let evaluation:[number, boolean] = this.gameState.getScore()
-                    if (evaluation[1]) {
-                        this.gameOver = true;
-
-                        // win or loss
-                        if(evaluation[0] == 100){
-                            console.log("Success!")
-                            this.ui.textContent = "You won!"
-                        } 
                     }
+
                     // Update score if game not finished
-                    else {
-                        console.log(`Score: ${this.gameState.getScore()[0]}`)
-                    }
+                    // else {
+                    //     console.log(`Score: ${this.gameState.getScore()[0]}`)
+                    // }
                 }
-            }
+            
         } else {
             console.log("Not player turn, yet");
         }
@@ -124,11 +124,18 @@ class Game {
             GameAI.moveKnight(this.king, this.knights, this.gameState);
             this.playerTurn = true;
 
-            // check lose
-            if (this.gameState.getScore()[1]) {
+            // check if win / lose
+            if ( !this.gameOver && this.gameState.getScore()[1] ) {
+                let evaluation:[number, boolean] = this.gameState.getScore()
                 this.gameOver = true;
-                console.log("Defeat..")
-                this.ui.textContent = "Defeat.."
+
+                if (evaluation[0] == 100) {
+                    console.log("Success!")
+                    this.ui.textContent = "You won!"
+                } else if (evaluation[0] == -100) {
+                    console.log("Defeat..")
+                    this.ui.textContent = "Defeat.."
+                }
             }
         }
 

@@ -173,23 +173,21 @@ class Game {
         if ((this.playerTurn) && (!moving) && (!this.gameOver)) {
             console.log(boardPos);
             let legalMoves = this.king.getMoves();
+            for (let knightPosition of this.gameState.knightPositions) {
+                for (let m of legalMoves) {
+                    if (Board.samePosition(knightPosition, m)) {
+                        console.log("That's a knight!");
+                        let index = legalMoves.indexOf(m);
+                        legalMoves.splice(index, 1);
+                    }
+                }
+            }
             for (let m of legalMoves) {
                 if (Board.samePosition(m, boardPos)) {
                     console.log("legal move");
                     this.king.setPosition(boardPos);
                     this.gameState.kingPos = boardPos;
                     this.playerTurn = false;
-                    let evaluation = this.gameState.getScore();
-                    if (evaluation[1]) {
-                        this.gameOver = true;
-                        if (evaluation[0] == 100) {
-                            console.log("Success!");
-                            this.ui.textContent = "You won!";
-                        }
-                    }
-                    else {
-                        console.log(`Score: ${this.gameState.getScore()[0]}`);
-                    }
                 }
             }
         }
@@ -205,10 +203,17 @@ class Game {
         if (!this.playerTurn) {
             GameAI.moveKnight(this.king, this.knights, this.gameState);
             this.playerTurn = true;
-            if (this.gameState.getScore()[1]) {
+            if (!this.gameOver && this.gameState.getScore()[1]) {
+                let evaluation = this.gameState.getScore();
                 this.gameOver = true;
-                console.log("Defeat..");
-                this.ui.textContent = "Defeat..";
+                if (evaluation[0] == 100) {
+                    console.log("Success!");
+                    this.ui.textContent = "You won!";
+                }
+                else if (evaluation[0] == -100) {
+                    console.log("Defeat..");
+                    this.ui.textContent = "Defeat..";
+                }
             }
         }
         requestAnimationFrame(() => this.gameLoop());
