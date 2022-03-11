@@ -136,10 +136,11 @@ class Game {
     constructor() {
         this.knights = [];
         this.gameOver = false;
-        this.KNIGHTS = 4;
+        this.KNIGHTS = 3;
         this.playerTurn = true;
         Board.getInstance();
         this.ui = document.getElementById("ui");
+        this.restart = document.getElementById("restart");
         this.king = new King();
         this.king.initPosition([Math.floor(Board.getInstance().getSize() / 2), Board.getInstance().getSize() - 1]);
         let knightPos = [];
@@ -153,6 +154,7 @@ class Game {
         this.gameState = new GameState(this.king.boardPosition, knightPos);
         window.addEventListener("click", (e) => this.onWindowClick(e));
         window.addEventListener("touchend", (e) => this.onTouchStart(e));
+        window.addEventListener("keyup", (e) => this.onSpacePress(e));
         this.gameLoop();
     }
     onTouchStart(e) {
@@ -161,6 +163,25 @@ class Game {
     }
     onWindowClick(e) {
         this.playerMove(e.x, e.y);
+    }
+    onSpacePress(e) {
+        if (e.code === "Space" && this.gameOver) {
+            this.restartGame();
+        }
+    }
+    restartGame() {
+        console.log("Restarting game.");
+        this.restart.textContent = "";
+        this.king.initPosition([Math.floor(Board.getInstance().getSize() / 2), Board.getInstance().getSize() - 1]);
+        let knightPos = [];
+        for (let c = 0; c < this.KNIGHTS; c++) {
+            let pos = [Math.floor((c / this.KNIGHTS) * Board.getInstance().getSize()), 0];
+            this.knights[c].initPosition(pos);
+            knightPos.push(pos);
+        }
+        this.gameState = new GameState(this.king.boardPosition, knightPos);
+        this.playerTurn = true;
+        this.gameOver = false;
     }
     playerMove(x, y) {
         let boardPos = Board.getInstance().screenToBoardPos([x, y]);
@@ -190,6 +211,8 @@ class Game {
                     this.playerTurn = false;
                 }
             }
+            console.log(`Score: ${this.gameState.getScore()[0]}`);
+            this.ui.textContent = `Score: ${this.gameState.getScore()[0]}`;
         }
         else {
             console.log("Not player turn, yet");
@@ -214,6 +237,7 @@ class Game {
                     console.log("Defeat..");
                     this.ui.textContent = "Defeat..";
                 }
+                this.restart.textContent = "Press [space] to restart";
             }
         }
         requestAnimationFrame(() => this.gameLoop());

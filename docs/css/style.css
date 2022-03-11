@@ -43,3 +43,10 @@ ui {
     text-align: center;
     z-index: 1;
 }
+
+#restart {
+    font-size: 32px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
