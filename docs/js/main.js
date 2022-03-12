@@ -125,7 +125,8 @@ class GameState {
         if (this.kingPos[1] == 0) {
             return [100, true];
         }
-        return [0, false];
+        let kingFinishDistance = (7 - this.kingPos[1]) * 100 / 7;
+        return [kingFinishDistance, false];
     }
     copy() {
         const knightPosCopy = Object.assign([], this.knightPositions);
@@ -275,6 +276,42 @@ class GameAI {
         gameState.knightPositions[i] = legalMoves[j];
         let t1 = performance.now();
         console.log("AI move took " + (t1 - t0) + " milliseconds.");
+    }
+    static minimax(gameState, depth, alpha, beta, isMaximizingPlayer) {
+        if (depth == 0 || gameState.getScore()[1]) {
+            return gameState.getScore()[0];
+        }
+        let king = new King();
+        let knight = new Knight();
+        let currentEval = 0;
+        if (isMaximizingPlayer) {
+            let maxEval = -Infinity;
+            for (let possibleMove of king.getMoves(gameState.kingPos)) {
+                gameState.kingPos = possibleMove;
+                currentEval = this.minimax(gameState, depth - 1, alpha, beta, false);
+                maxEval = Math.max(maxEval, currentEval);
+                alpha = Math.max(alpha, currentEval);
+                if (beta <= alpha) {
+                    break;
+                }
+            }
+            return maxEval;
+        }
+        else {
+            let minEval = Infinity;
+            for (let knIndex = 0; knIndex < gameState.knightPositions.length; knIndex++) {
+                for (let possibleMove of knight.getMoves(gameState.knightPositions[knIndex])) {
+                    gameState.knightPositions[knIndex] = possibleMove;
+                    currentEval = this.minimax(gameState, depth - 1, alpha, beta, true);
+                    minEval = Math.max(minEval, currentEval);
+                    beta = Math.max(beta, currentEval);
+                    if (beta <= alpha) {
+                        break;
+                    }
+                }
+            }
+            return minEval;
+        }
     }
 }
 class King extends ChessPiece {

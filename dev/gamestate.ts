@@ -25,8 +25,10 @@ class GameState {
         // not over yet, return an evaluation of the gamestate
         // higher number is better for king, lower better for the knights
 
+        let kingFinishDistance : number = (7 - this.kingPos[1]) * 100 / 7
+
         // Hint: use the position of the king stored in this.kingPos
-        return [0, false]
+        return [kingFinishDistance, false]
     }
 
     // create a copy of the gamestate (needed by AI to look into the future)
