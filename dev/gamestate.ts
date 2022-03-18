@@ -11,8 +11,8 @@ class GameState {
     // higher value is better gamestate for the king (100 is win, -100 is lose)
     public getScore() : [number, boolean] {
         // game over
-        for (let z of this.knightPositions) {
-            if (Board.samePosition(z, this.kingPos)) {
+        for (let knPos of this.knightPositions) {
+            if (Board.samePosition(knPos, this.kingPos)) {
                 return [-100, true];
             }
         }
@@ -22,10 +22,22 @@ class GameState {
             return[100, true];
         } 
 
+        // Score based on how close the king is to the finish
+        // tile 0: 0,  tile 2: 28,57,  tile 6: 85.71, etc
+        let kingFinishDistance : number = (7 - this.kingPos[1]) * 100 / 7
+
+
+        //Knight is better
+        for (let knPos of this.knightPositions) {
+            if (Board.betterThanKingPos(knPos, this.kingPos)) {
+
+                return[kingFinishDistance * -50, false]
+            }
+        }
+
         // not over yet, return an evaluation of the gamestate
         // higher number is better for king, lower better for the knights
 
-        let kingFinishDistance : number = (7 - this.kingPos[1]) * 100 / 7
 
         // Hint: use the position of the king stored in this.kingPos
         return [kingFinishDistance, false]
