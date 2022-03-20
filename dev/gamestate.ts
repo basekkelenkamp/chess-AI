@@ -13,13 +13,13 @@ class GameState {
         // game over
         for (let knPos of this.knightPositions) {
             if (Board.samePosition(knPos, this.kingPos)) {
-                return [-100, true];
+                return [Infinity, true];
             }
         }
 
         // win
         if (this.kingPos[1] == 0) {
-            return[100, true];
+            return[-Infinity, true];
         } 
 
         // Score based on how close the king is to the finish
@@ -31,7 +31,7 @@ class GameState {
         for (let knPos of this.knightPositions) {
             if (Board.betterThanKingPos(knPos, this.kingPos)) {
 
-                return[kingFinishDistance * -50, false]
+                return[60, false]
             }
         }
 
@@ -40,7 +40,7 @@ class GameState {
 
 
         // Hint: use the position of the king stored in this.kingPos
-        return [kingFinishDistance, false]
+        return [-kingFinishDistance, false]
     }
 
     // create a copy of the gamestate (needed by AI to look into the future)

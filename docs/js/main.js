@@ -122,19 +122,19 @@ class GameState {
     getScore() {
         for (let knPos of this.knightPositions) {
             if (Board.samePosition(knPos, this.kingPos)) {
-                return [-100, true];
+                return [Infinity, true];
             }
         }
         if (this.kingPos[1] == 0) {
-            return [100, true];
+            return [-Infinity, true];
         }
         let kingFinishDistance = (7 - this.kingPos[1]) * 100 / 7;
         for (let knPos of this.knightPositions) {
             if (Board.betterThanKingPos(knPos, this.kingPos)) {
-                return [kingFinishDistance * -50, false];
+                return [60, false];
             }
         }
-        return [kingFinishDistance, false];
+        return [-kingFinishDistance, false];
     }
     copy() {
         const knightPosCopy = Object.assign([], this.knightPositions);
@@ -287,7 +287,7 @@ class GameAI {
     }
     static findBestIndexAndMove(depth, king, knights, gameState, isMaximizingPlayer) {
         let knIndex = 0;
-        let bestEval = -1000;
+        let bestEval = -Infinity;
         let originalGameState = gameState.copy();
         let bestMove = [0, 0];
         let bestKnIndex = 0;
@@ -298,13 +298,13 @@ class GameAI {
                     knight.setPosition(move);
                     gameState.knightPositions[knIndex] = move;
                     let moveEval = GameAI.minimax(gameState, depth - 1, isMaximizingPlayer, king, knights, knight, knIndex);
-                    console.log("move Eval: " + moveEval);
                     knights[knIndex].setPosition(originalGameState.knightPositions[knIndex]);
                     gameState.knightPositions[knIndex] = originalGameState.knightPositions[knIndex];
                     if (moveEval > bestEval) {
                         bestMove = move;
                         bestEval = moveEval;
                         bestKnIndex = knIndex;
+                        console.log("NEW BEST MOVE FOUND!!!!!!!!! " + bestKnIndex + " " + bestMove);
                     }
                 }
             }
@@ -328,7 +328,7 @@ class GameAI {
             return score;
         }
         if (isMaximizingPlayer) {
-            let maxEval = -1000;
+            let maxEval = -Infinity;
             for (let move of knight.getMoves()) {
                 knights[knIndex].setPosition(move);
                 gameState.knightPositions[knIndex] = move;
@@ -340,7 +340,7 @@ class GameAI {
             return maxEval;
         }
         else {
-            let maxEval = 1000;
+            let maxEval = -1000;
             for (let move of king.getMoves()) {
                 knights[knIndex].setPosition(move);
                 gameState.knightPositions[knIndex] = move;

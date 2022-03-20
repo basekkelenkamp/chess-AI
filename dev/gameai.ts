@@ -67,7 +67,7 @@ class GameAI {
         isMaximizingPlayer: boolean) : [number, number, number] {
 
             let knIndex: number = 0
-            let bestEval: number = -1000
+            let bestEval: number = -Infinity
             let originalGameState: GameState = gameState.copy()
 
             let bestMove: [number, number] = [0,0]
@@ -84,7 +84,7 @@ class GameAI {
                         gameState.knightPositions[knIndex] = move
 
                         let moveEval = GameAI.minimax(gameState, depth-1, isMaximizingPlayer, king, knights, knight, knIndex)
-                        console.log("move Eval: " + moveEval)
+                        // console.log("move Eval: " + moveEval)
 
                         knights[knIndex].setPosition(originalGameState.knightPositions[knIndex])
                         gameState.knightPositions[knIndex] = originalGameState.knightPositions[knIndex]
@@ -93,6 +93,7 @@ class GameAI {
                             bestMove = move
                             bestEval = moveEval
                             bestKnIndex = knIndex
+                            console.log("NEW BEST MOVE FOUND!!!!!!!!! " + bestKnIndex + " " + bestMove)
                         }
 
                     }
@@ -112,7 +113,6 @@ class GameAI {
         return false
     }
 
-    // Give copy of gamestate
     public static minimax(
         gameState : GameState, 
         depth : number,
@@ -137,7 +137,7 @@ class GameAI {
 
         // If current move is maximizer, find the maximum attainable value
         if (isMaximizingPlayer) {
-            let maxEval = -1000
+            let maxEval = -Infinity
 
             for (let move of knight.getMoves()) {
 
@@ -157,7 +157,7 @@ class GameAI {
             return maxEval
 
         } else {
-            let maxEval = 1000
+            let maxEval = -1000
 
             for (let move of king.getMoves()) {
 
