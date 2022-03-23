@@ -1,7 +1,7 @@
 /// <reference path="tile.ts" />
 
 class Board {
-    private readonly BOARD_SIZE = 8;    // size of the board (smaller is easier for the AI) default:8
+    private readonly BOARD_SIZE = 6;    // size of the board (smaller is easier for the AI) default:8
     private tileSize = 100;             // size of a board tile 
     
     private static instance:Board;

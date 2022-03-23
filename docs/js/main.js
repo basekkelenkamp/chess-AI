@@ -73,7 +73,7 @@ class Tile extends ChessPiece {
 window.customElements.define("tile-component", Tile);
 class Board {
     constructor() {
-        this.BOARD_SIZE = 8;
+        this.BOARD_SIZE = 6;
         this.tileSize = 100;
         let smallestSide = Math.min(window.innerWidth, window.innerHeight);
         this.tileSize = Math.floor(smallestSide / this.BOARD_SIZE);
@@ -145,7 +145,7 @@ class Game {
     constructor() {
         this.knights = [];
         this.gameOver = false;
-        this.KNIGHTS = 4;
+        this.KNIGHTS = 3;
         this.playerTurn = true;
         Board.getInstance();
         this.ui = document.getElementById("ui");
