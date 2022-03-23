@@ -5,7 +5,7 @@ class GameAI {
     // knight and the gamestate
 
     
-    public static depth: number = 0;
+    public static depth: number = 5;
 
 
     public static moveKnight(king:King, knights: Knight[], gameState:GameState) {
@@ -13,9 +13,8 @@ class GameAI {
 
 
         let bestEval: number = +Infinity
-        let depth: number = 4
         let bestKnightIndex: number = 0
-        let bestMove: [number, number] = [0,0]
+        let bestMove: [number, number] = [-1, -1]
         let isMaximizingPlayer: boolean = true
     
         for (let kn: number = 0; kn < knights.length; kn++) {
@@ -23,24 +22,30 @@ class GameAI {
 
             for (let moveIndex: number = 0; moveIndex < legalMoves.length; moveIndex++) {
                 if (!GameAI.checkIfSameKnight(legalMoves[moveIndex], knights)) {
-
+                    let currentMove = legalMoves[moveIndex]
                     let gameStateCopy = gameState.copy()
-                    gameStateCopy.knightPositions[kn] = legalMoves[moveIndex]
-                    let currentEval = GameAI.minimax(gameStateCopy, depth, isMaximizingPlayer, king, knights)
+                    gameStateCopy.knightPositions[kn] = currentMove
+                    let currentEval = GameAI.minimax(gameStateCopy, GameAI.depth, isMaximizingPlayer, king, knights)
                     
-                    if (currentEval < bestEval) {
+                    if (currentEval === -100) {
+                        console.log("checkmate found!")
                         bestEval = currentEval
-                        bestMove = legalMoves[moveIndex]
+                        bestMove = currentMove
+                        bestKnightIndex = kn
+                        break
+                    }
+                    if ( 
+                    (currentEval < bestEval) && 
+                    (Board.isKnightUnderKing(gameState.kingPos, currentMove)) 
+                        ) {
+                        bestEval = currentEval
+                        bestMove = currentMove
                         bestKnightIndex = kn
                     }
                 }
             }
         }
-    
-
         
-        
-
         // GameAI.depth = 5
         // GameAI.bestKnightIndexAndMove = this.findBestIndexAndMove(GameAI.depth, king, knights, gameState, true)
 
@@ -55,10 +60,10 @@ class GameAI {
 
         // knights[i].setPosition(legalMoves[j]);
         // gameState.knightPositions[i] = legalMoves[j];
+        
 
-
-        knights[bestKnightIndex].setPosition(bestMove);
-        gameState.knightPositions[bestKnightIndex] = bestMove;
+        knights[bestKnightIndex].setPosition(bestMove)
+        gameState.knightPositions[bestKnightIndex] = bestMove
 
         // RANDOM MOVE - END   ------------------
 
@@ -123,46 +128,43 @@ class GameAI {
 
     //minimax function
     public static minimax(
-        board: GameState,
+        gameState: GameState,
         depth: number,
         isMaximizingPlayer: boolean,
         king: King,
         knights: Knight[]
         ): number {
 
-            if (depth === 0) {
-            return board.getScore()[0]
-            }
-            // if win or lose, return score
-            if (board.getScore()[1]) {
-            return board.getScore()[0]
-            }
-        
+            // if win/lose or depth reached, return score
+            if (gameState.getScore()[1] || depth === 0) {
+                return gameState.getScore()[0]
+                }
+
             if (isMaximizingPlayer) {
             let bestEval: number = +Infinity
 
             for (let k: number = 0; k < knights.length; k++) {
-                let position = board.knightPositions[k];
+                let position = gameState.knightPositions[k];
                 
                 let legalMoves: [number, number][] = knights[k].getMoves(position);
-                for (let m: number = 0; m < legalMoves.length; m++) {
-                let gameCopy = board.copy();
-                gameCopy.knightPositions[k] = legalMoves[m];
-                let currentEval = GameAI.minimax(gameCopy, depth - 1, false, king, knights);
-                if (currentEval + depth < bestEval) {
-                    bestEval = currentEval + depth;
-                }
+                    for (let m: number = 0; m < legalMoves.length; m++) {
+                    let gameCopy = gameState.copy();
+                    gameCopy.knightPositions[k] = legalMoves[m];
+                    let currentEval = GameAI.minimax(gameCopy, depth - 1, false, king, knights);
+                    if (currentEval + depth < bestEval) {
+                        bestEval = currentEval + depth;
+                    }
                 }
             }
             return bestEval;
 
             } else {
             let bestEval: number = -Infinity;
-            let position = board.kingPos;
+            let position = gameState.kingPos;
 
             let legalMoves: [number, number][] = king.getMoves(position);
             for (let m: number = 0; m < legalMoves.length; m++) {
-                let gameCopy = board.copy();
+                let gameCopy = gameState.copy();
                 gameCopy.kingPos = legalMoves[m];
                 let currentEval = GameAI.minimax(gameCopy, depth - 1, true, king, knights);
                 if (currentEval - depth > bestEval) {

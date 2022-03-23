@@ -1,7 +1,7 @@
 /// <reference path="tile.ts" />
 
 class Board {
-    private readonly BOARD_SIZE = 8;    // size of the board (smaller is easier for the AI)
+    private readonly BOARD_SIZE = 6;    // size of the board (smaller is easier for the AI) default:8
     private tileSize = 100;             // size of a board tile 
     
     private static instance:Board;
@@ -58,8 +58,8 @@ class Board {
     }
 
     //Check if knight pos is better than king pos
-    public static betterThanKingPos(a:[number, number], b:[number, number]) : boolean {
-        return (a[0] === b[0] && a[1] <= b[1])
+    public static isKnightUnderKing(king:[number, number], knight:[number, number]) : boolean {
+        return (knight[1] < king[1])
     }
     
     //Check if knight pos is within a range of 2 tiles to king pos

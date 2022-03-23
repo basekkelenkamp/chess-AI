@@ -54,7 +54,9 @@ class GameState {
 
         // // Hint: use the position of the king stored in this.kingPos
         // return [sumScore, false]
-        return [this.kingPos[1] * -10, false]
+        let kingFinishDistance : number = (7 - this.kingPos[1]) * 100 / 7
+
+        return [kingFinishDistance, false]
     }
 
     // create a copy of the gamestate (needed by AI to look into the future)
