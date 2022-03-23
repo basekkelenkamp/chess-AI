@@ -61,4 +61,14 @@ class Board {
     public static betterThanKingPos(a:[number, number], b:[number, number]) : boolean {
         return (a[0] === b[0] && a[1] <= b[1])
     }
+    
+    //Check if knight pos is within a range of 2 tiles to king pos
+    public static closeToKing(a:[number, number], b:[number, number]) : boolean {
+        return ( 
+            (a[0] >= b[0]-2 && a[0] <= b[0]+2) 
+            ||
+            (a[1] >= b[1]-2 && a[1] <= b[1]+2)
+        )
+    }
+    
 }
